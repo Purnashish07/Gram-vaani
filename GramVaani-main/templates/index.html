@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GramVaani - Voice + Chat Bot</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">🎙️ GramVaani</div>
+        <p>बोलिए या लिखिए - सरकारी योजनाओं की जानकारी तुरंत</p>
+        <div class="mode-toggle">
+          <button id="chatModeBtn" class="mode-btn active">💬 Chat Mode</button>
+          <button id="voiceModeBtn" class="mode-btn">🎤 Voice Mode</button>
+        </div>
+      </header>
+
+      <div class="main-card">
+        <div class="lang-switch">
+          <button class="lang-btn active" data-lang="hi-IN">हिन्दी</button>
+          <button class="lang-btn" data-lang="en-IN">English</button>
+        </div>
+
+        <!-- Chat Window -->
+        <div id="chatBox" class="chat-box">
+          <div class="msg bot">
+            नमस्ते! 🙏 मैं GramVaani हूँ।<br />आप मुझसे किसी भी सरकारी योजना के
+            बारे में पूछ सकते हैं।<br /><br /><b>बोलकर पूछें</b> या
+            <b>नीचे लिखें</b> - जैसे "किसान योजना" या "गैस योजना"
+          </div>
+        </div>
+
+        <!-- Quick Eligibility Filter Box -->
+        <div class="eligibility-filter-box">
+          <h4>Aapke Liye Sahi Yojana Khojein:</h4>
+          <div class="filter-inputs">
+            <select id="occupationFilter">
+              <option value="">Aapka Vyavasay (Occupation)</option>
+              <option value="farmer">Kisan (Farmer)</option>
+              <option value="student">Chhatra (Student)</option>
+              <option value="worker">Majoor / Shramik</option>
+            </select>
+
+            <select id="categoryFilter">
+              <option value="">Shreni (Category)</option>
+              <option value="general">Awas (Housing)</option>
+              <option value="pension">Pension</option>
+              <option value="health">Swasthya (Health)</option>
+            </select>
+
+            <button onclick="applyQuickFilter()" class="filter-btn">
+              Filter Karein
+            </button>
+          </div>
+        </div>
+
+        <!-- Voice Visualizer -->
+        <div id="voicePanel" class="voice-panel hidden">
+          <div class="mic-section">
+            <button id="micBtn" class="mic-btn"><span>🎤</span></button>
+            <p id="micStatus">बोलने के लिए माइक दबाएं और होल्ड करें</p>
+            <div id="wave" class="wave hidden">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <canvas id="visualizer" width="300" height="60"></canvas>
+          </div>
+        </div>
+
+        <!-- Input Area - Always Visible -->
+        <div class="input-area">
+          <button id="micSmallBtn" class="mic-small-btn" title="Voice Input">
+            🎤
+          </button>
+          <input
+            type="text"
+            id="textInput"
+            placeholder="यहाँ लिखें - जैसे 'मुझे आवास योजना चाहिए' "
+          />
+          <button id="sendBtn">भेजें ➤</button>
+        </div>
+
+        <!-- Quick Suggestions & Voice Read Button -->
+        <div class="quick-chips">
+          <button onclick="quickAsk('PM Kisan Yojana kya hai?')">
+            🌾 PM Kisan
+          </button>
+          <button onclick="quickAsk('आवास योजना के लिए कैसे आवेदन करें?')">
+            🏠 आवास
+          </button>
+          <button onclick="quickAsk('उज्ज्वला गैस योजना')">
+            🔥 उज्ज्वला गैस
+          </button>
+          <button onclick="quickAsk('Ayushman Bharat me 5 lakh ka ilaj')">
+            🏥 आयुष्मान
+          </button>
+          <button onclick="quickAsk('बेरोजगारों के लिए योजना')">
+            💼 रोजगार
+          </button>
+          <button onclick="speakLastResponse()" class="speech-btn">
+            🔊 Sunein
+          </button>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <p>
+          🎧 <b>Voice:</b> Mic दबाएं → बोलें → Auto Send | 💬 <b>Chat:</b> Type
+          करें → Enter दबाएं
+        </p>
+      </div>
+
+      <!-- Action Buttons Row -->
+      <div class="action-buttons">
+        <button
+          onclick="
+            shareOnWhatsApp(
+              'GramVaani Portal',
+              'Sarkari yojanaon ki jankari prapt karein.',
+            )
+          "
+          class="btn-whatsapp"
+        >
+          📲 WhatsApp Par Share Karein
+        </button>
+        <button onclick="printSchemeCard()" class="btn-pdf">
+          📄 Download PDF / Print
+        </button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <audio id="audioPlayer"></audio>
+
+    <!-- Project Script -->
+    <script src="/static/js/script.js"></script>
+
+    <!-- Additional Features JS Logic -->
+    <script>
+      // 1. Text-to-Speech (Audio Read-Aloud)
+      function speakText(text) {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+          const cleanText = text.replace(/<[^>]*>?/gm, "");
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.lang = "hi-IN";
+          utterance.rate = 0.95;
+          window.speechSynthesis.speak(utterance);
+        } else {
+          alert("Aapke browser me Text-to-Speech feature supported nahi hai.");
+        }
+      }
+
+      function speakLastResponse() {
+        const chatBox = document.getElementById("chatBox");
+        const botMessages = chatBox.getElementsByClassName("msg bot");
+        if (botMessages.length > 0) {
+          const lastMsgText = botMessages[botMessages.length - 1].innerText;
+          speakText(lastMsgText);
+        } else {
+          alert("Sunaane ke liye koi message nahi milaa.");
+        }
+      }
+
+      // 2. WhatsApp Sharing Functionality
+      function shareOnWhatsApp(schemeName, schemeDetails) {
+        const message = `*GramVaani Portal Details*\n\n📌 *Yojana:* ${schemeName}\n📝 *Jankari:* ${schemeDetails}\n\nGramVaani Portal par aur yojanaon ki jankari dekhein!`;
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, "_blank");
+      }
+
+      // 3. Download PDF / Print Functionality
+      function printSchemeCard() {
+        window.print();
+      }
+
+      // 4. Quick Eligibility Filter Logic
+      function applyQuickFilter() {
+        const occupation = document.getElementById("occupationFilter").value;
+        const category = document.getElementById("categoryFilter").value;
+
+        if (!occupation && !category) {
+          alert("Kripya kam se kam ek option filter me chunein.");
+          return;
+        }
+
+        let queryParts = [];
+        if (occupation) queryParts.push(occupation);
+        if (category) queryParts.push(category);
+
+        const generatedQuery = `${queryParts.join(" ")} yojana`;
+        const inputField = document.getElementById("textInput");
+
+        if (inputField) {
+          inputField.value = generatedQuery;
+          const sendBtn = document.getElementById("sendBtn");
+          if (sendBtn) {
+            sendBtn.click();
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

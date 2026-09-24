@@ -1,0 +1,47 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Devanagari','Poppins',sans-serif;background:linear-gradient(180deg,#FFF8E1 0%,#FFECB3 100%);color:#333;min-height:100vh}
+.container{max-width:760px;margin:0 auto;padding:16px}
+header{text-align:center;padding:15px 0}
+.logo{font-size:2.5rem;font-weight:800;color:#E65100;letter-spacing:-1px}
+header p{color:#6D4C41;font-size:1.05rem;margin-top:4px}
+.mode-toggle{display:flex;gap:10px;justify-content:center;margin-top:15px}
+.mode-btn{padding:8px 20px;border-radius:25px;border:1.5px solid #FF9800;background:#fff;cursor:pointer;font-weight:600;transition:0.2s}
+.mode-btn.active{background:#FF9800;color:#fff;box-shadow:0 4px 12px rgba(255,152,0,0.3)}
+.main-card{background:#fff;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.08);padding:22px;margin-top:10px;display:flex;flex-direction:column;height:72vh}
+.lang-switch{display:flex;gap:8px;justify-content:flex-end;margin-bottom:10px}
+.lang-btn{padding:4px 14px;border-radius:20px;border:1px solid #FFCC80;background:#fff;cursor:pointer;font-size:0.85rem}
+.lang-btn.active{background:#FF9800;color:#fff}
+.chat-box{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:10px 5px;scroll-behavior:smooth}
+.msg{padding:12px 16px;border-radius:16px;max-width:88%;line-height:1.55;font-size:0.96rem;word-wrap:break-word;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,#2E7D32,#43A047);color:#fff;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:#FFF3E0;border:1px solid #FFE0B2;border-bottom-left-radius:4px;color:#3E2723}
+.msg.bot.typing{opacity:0.7}
+.scheme-card{border:1px solid #FFCC80;border-radius:12px;padding:12px;margin-top:8px;background:#FFFBF0}
+.scheme-card h4{color:#BF360C;margin-bottom:4px;font-size:1rem}
+.scheme-card p{font-size:0.9rem;margin:4px 0}
+.voice-panel{text-align:center;padding:10px;border-top:1px dashed #FFE0B2;margin-top:10px}
+.voice-panel.hidden{display:none}
+.mic-btn{width:86px;height:86px;border-radius:50%;border:none;background:linear-gradient(135deg,#FF9800,#E65100);color:#fff;font-size:36px;cursor:pointer;box-shadow:0 6px 20px rgba(230,81,0,0.3);transition:0.2s}
+.mic-btn.listening{transform:scale(1.08);background:linear-gradient(135deg,#E53935,#B71C1C);animation:pulse 1s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(229,57,53,0.6)}70%{box-shadow:0 0 0 18px rgba(229,57,53,0)}100%{box-shadow:0 0 0 0 rgba(229,57,53,0)}}
+#micStatus{margin-top:10px;color:#666;font-size:0.9rem}
+.wave{display:flex;gap:4px;justify-content:center;margin-top:10px}
+.wave.hidden{display:none}
+.wave span{width:4px;height:18px;background:#FF9800;border-radius:10px;animation:wave 0.8s infinite}
+.wave span:nth-child(2){animation-delay:0.1s}.wave span:nth-child(3){animation-delay:0.2s}.wave span:nth-child(4){animation-delay:0.3s}.wave span:nth-child(5){animation-delay:0.15s}
+@keyframes wave{0%,100%{height:10px}50%{height:28px}}
+#visualizer{margin-top:12px;border-radius:8px;background:#FFF8E1;width:100%;max-width:300px;height:60px}
+.input-area{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid #FFF3E0;align-items:center}
+.mic-small-btn{width:42px;height:42px;border-radius:50%;border:none;background:#FFF3E0;cursor:pointer;font-size:18px;flex-shrink:0}
+.mic-small-btn.active{background:#FFCDD2;animation:pulse 1s infinite}
+.input-area input{flex:1;padding:12px 16px;border-radius:25px;border:1.5px solid #FFE0B2;outline:none;font-size:0.96rem;background:#FFFBF0}
+.input-area input:focus{border-color:#FF9800}
+.input-area button#sendBtn{background:#2E7D32;color:#fff;border:none;padding:0 20px;height:42px;border-radius:25px;cursor:pointer;font-weight:600;flex-shrink:0}
+.quick-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.quick-chips button{padding:6px 12px;border-radius:20px;border:1px dashed #FF9800;background:#FFF8E1;cursor:pointer;font-size:0.85rem;transition:0.15s}
+.quick-chips button:hover{background:#FF9800;color:#fff}
+.info-box{text-align:center;padding:12px;margin-top:12px;background:#fff;border-radius:12px;font-size:0.85rem;color:#795548}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 18px;border-radius:25px;font-size:0.9rem;opacity:0;transition:0.3s;pointer-events:none}
+.toast.show{opacity:1;bottom:30px}
+@media(max-width:600px){.main-card{height:78vh;padding:16px}.logo{font-size:2rem}}
